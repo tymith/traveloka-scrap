@@ -17,10 +17,6 @@ class JSONEncoder(json.JSONEncoder):
 app = Flask(__name__)
 api = Api(app)
 
-# app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
-# mongo = PyMongo(app)
-
-
 client = MongoClient('mongodb://admin:adm00n@test-cluster-shard-00-00-zk4lm.mongodb.net:27017,test-cluster-shard-00-01-zk4lm.mongodb.net:27017,test-cluster-shard-00-02-zk4lm.mongodb.net:27017/test?ssl=true&replicaSet=test-cluster-shard-0&authSource=admin&retryWrites=true')
 
 db = client['flight']
@@ -34,7 +30,6 @@ class getResult(Resource):
             res.append(x)
         
         return json.loads(JSONEncoder().encode(res))
-
 
 api.add_resource(getResult, '/traveloka')
 
