@@ -3,14 +3,22 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pymongo import MongoClient
+import datetime
 
 client = MongoClient('mongodb://admin:adm00n@test-cluster-shard-00-00-zk4lm.mongodb.net:27017,test-cluster-shard-00-01-zk4lm.mongodb.net:27017,test-cluster-shard-00-02-zk4lm.mongodb.net:27017/test?ssl=true&replicaSet=test-cluster-shard-0&authSource=admin&retryWrites=true')
 
+departure_airport = 'CGK' # CGK
+arrival_airport = 'DPS' # DPS
+departure_date = datetime.datetime.now().strftime('%d-%m-%Y') # dd-mm-yyyy
+arrival_date = 'NA'
+passenger = '1.0.0' # adult child infant 1.1.1
+seat_class = 'ECONOMY' # ECONOMY BUSINESS FIRST PREMIUM_ECONOMY
+
 db = client['flight']
-coll = db['traveloka']
+coll = db['traveloka.{}'.format(datetime.datetime.now())]
 
 driver = webdriver.Chrome()
-driver.get("https://www.traveloka.com/en-id/flight/fullsearch?ap=CGK.KNO&dt=27-11-2018.NA&ps=1.0.0&sc=ECONOMY")
+driver.get("https://www.traveloka.com/en-id/flight/fullsearch?ap={}.{}&dt={}.{}&ps={}&sc={}".format(departure_airport, arrival_airport, departure_date, arrival_date, passenger, seat_class))
 
 soup_base = BeautifulSoup(driver.page_source, 'html.parser')
 
@@ -46,8 +54,8 @@ for item in zip_list:
     obj = {
         "plane_vendor": item[0],
         "price": item[1],
-        "departure": item[2],
-        "arrival": item[3],
+        "departure_time": item[2],
+        "arrival_time": item[3],
         "duration": item[4],
         "source": {
             "source_id": 1,

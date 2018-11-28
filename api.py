@@ -22,17 +22,16 @@ client = MongoClient('mongodb://admin:adm00n@test-cluster-shard-00-00-zk4lm.mong
 db = client['flight']
 coll = db['traveloka']
 
-res = []
-
 class getResult(Resource):
     def get(self):
+        res = []
         for x in coll.find():
             res.append(x)
         
         return json.loads(JSONEncoder().encode(res))
 
-api.add_resource(getResult, '/traveloka')
+api.add_resource(getResult, '/')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int("5000"), debug=True)
     
